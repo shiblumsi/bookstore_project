@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn bookstore_project.wsgi -b 0.0.0.0:8000
+    environment:
+    - ENVIRONMENT=development
+    - SECRET_KEY=django-insecure-u6j*%$$#3$$i3y^tv#kz320f%ivq&l@)8@&xr=k*bva4)9t2_(9r
+    - DEBUG=1
+    - STRIPE_TEST_PUBLISHABLE_KEY=pk_test_z0RwrXvCriA1qe4Zd9Z6S5hZ00MfxDoeCZ
+    - STRIPE_TEST_SECRET_KEY=sk_test_AcmfKy26FSONLhkigSBwek9h0064qlCPj3
+    volumes:
+      - .:/code
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+volumes:
+  postgres_data:
